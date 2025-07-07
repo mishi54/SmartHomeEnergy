@@ -14,7 +14,6 @@ export const register = asyncHandler(async (req, res) => {
       "any.only": "Passwords do not match",
     }),
     role:Joi.string().required(),
-    brokerage_name:Joi.string().required(),
   });
 
   const error = await validator(registerSchema, req.body);

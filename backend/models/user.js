@@ -19,7 +19,6 @@ export default (sequelize, DataTypes) => {
       otp_expiration: DataTypes.DATE,
       image: DataTypes.STRING,
       status: DataTypes.STRING,
-      subscription_status: DataTypes.STRING,
       blockUntil: DataTypes.DATE,
       role:DataTypes.STRING,
     },

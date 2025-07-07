@@ -9,6 +9,7 @@ import session from "express-session";
 import bodyParser from 'body-parser';
 import path from "path";
 import { fileURLToPath } from 'url';
+import telemetryRouter from "./routes/telemetry.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -46,6 +47,9 @@ app.use(session({
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+
+app.use("/api/telemetry", telemetryRouter);
+
 app.use(errorHandler);
 app.listen(port, () => {
   console.log("server listening on port", port);

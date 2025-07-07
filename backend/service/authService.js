@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import moment from "moment";
 import { sequelize } from "../models/index.js";
 import { ApiError } from "../util/ApiError.js";
+import { simulateInitialTelemetry } from "./telemetrySimulator.js";
 
 const sanitizeUser = (user) => {
   const { password, ...cleanUser } = user.get({ plain: true });
@@ -27,6 +28,7 @@ export const registerUser = async ({ name, email, password, role}) => {
     role,
   });
 
+    await simulateInitialTelemetry(newUser.id);
   const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET_KEY, {
     expiresIn: "40d",
   });

@@ -13,7 +13,6 @@ export const updateUser = asyncHandler(async (req, res) => {
           "any.only": "Passwords do not match",
         }),
     role:Joi.string().optional(),
-    brokerage_name:Joi.string().optional(),
   });
 
   const error = await validator(updateSchema, req.body);
@@ -30,7 +29,6 @@ export const updateUser = asyncHandler(async (req, res) => {
     password: req.body.password,
     profile_image: imagePath,
     role:req.body.role,
-    brokerage_name:req.body.brokerage_name,
   });
 
   return res
