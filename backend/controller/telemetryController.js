@@ -9,6 +9,7 @@ export const submitTelemetry = asyncHandler(async (req, res) => {
   const schema = Joi.object({
     deviceId: Joi.string().required(),
     timestamp: Joi.date().iso().required(),
+      deviceName: Joi.string().required(), 
     energyWatts: Joi.number().required(),
   });
 

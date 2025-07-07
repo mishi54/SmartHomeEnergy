@@ -19,6 +19,7 @@ export default (sequelize, DataTypes) => {
   telemetrydata.init({
     deviceId: DataTypes.STRING,
     timestamp: DataTypes.DATE,
+    deviceName: DataTypes.STRING, 
     energyWatts: DataTypes.FLOAT,
     userId: DataTypes.INTEGER
   }, {

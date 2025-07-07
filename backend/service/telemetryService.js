@@ -1,8 +1,9 @@
 import { sequelize } from "../models/index.js";
 
-export const saveTelemetry = async ({ deviceId, timestamp, energyWatts, userId }) => {
+export const saveTelemetry = async ({ deviceId, timestamp, energyWatts,deviceName, userId }) => {
   return await sequelize.models.telemetrydata.create({
     deviceId,
+    deviceName,
     timestamp,
     energyWatts,
     userId,
