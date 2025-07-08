@@ -69,3 +69,23 @@ Filter devices using keyword matching from question
 Return results in structured <ul><li> with inline styling
 
 Strictly on-topic replies only about energy usage
+
+
+In your env add these all before npm run dev
+DB_DATABASE=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+JWT_SECRET_KEY=
+PORT=
+SMTP_EMAIL=
+SMTP_PASSWORD=
+SESSION_SECRET=
+OPENAI_API_KEY=
+
+
+
+
+
+
+
