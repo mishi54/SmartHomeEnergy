@@ -2,7 +2,7 @@ import Joi from "joi";
 import { asyncHandler } from "../util/asyncHandler.js";
 import { ApiError } from "../util/ApiError.js";
 import { ApiResponse } from "../util/ApiResponse.js";
-import { saveTelemetry, getDeviceTelemetry } from "../service/telemetryService.js";
+import { saveTelemetry, getDeviceTelemetry, getTelemetrySummaryByUser } from "../service/telemetryService.js";
 import validator from "../util/validator.js";
 
 export const submitTelemetry = asyncHandler(async (req, res) => {
@@ -36,4 +36,13 @@ console.log("Device ID:", deviceId);
   const data = await getDeviceTelemetry(deviceId,req.user.id);
   console.log(data);
   return res.status(200).json(new ApiResponse(200, data, "Device telemetry fetched"));
+});
+
+export const getTelemetrySummary = asyncHandler(async (req, res) => {
+
+  const summary = await getTelemetrySummaryByUser(req.user.id);
+console.log("Telemetry Summary:", summary);
+  return res.status(200).json(
+    new ApiResponse(200, summary, summary.length ? "Telemetry summary fetched" : "No data found")
+  );
 });

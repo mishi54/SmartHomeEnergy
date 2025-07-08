@@ -20,35 +20,27 @@ export const processChatPrompt = async (userId, question) => {
     if (!grouped[record.deviceName]) grouped[record.deviceName] = [];
     grouped[record.deviceName].push(record.energyWatts);
   }
+  const lowerQuestion = question.toLowerCase();
+const relevantDevices = Object.entries(grouped).filter(([name]) => {
+  const deviceKeywords = name.toLowerCase().split(" ");
+  return deviceKeywords.some(word => lowerQuestion.includes(word));
+});
 
-  const summary = Object.entries(grouped).map(([name, watts]) => {
-    const total = watts.reduce((a, b) => a + b, 0).toFixed(2);
-    const avg = (watts.reduce((a, b) => a + b, 0) / watts.length).toFixed(2);
-    return `${name}: total ${total}W, average ${avg}W`;
-  }).join("\n");
+  const devicesToUse = (relevantDevices.length ? relevantDevices : Object.entries(grouped))
+    .map(([name, watts]) => {
+      const total = watts.reduce((a, b) => a + b, 0);
+      const avg = total / watts.length;
+      return { name, total, avg };
+    })
+    .sort((a, b) => b.total - a.total) 
+    .slice(0, 2); 
 
-//   const prompt = `
-// You are an energy assistant in a smart home web application.
+  const summary = devicesToUse.map(
+    ({ name, total, avg }) =>
+      `${name}: total ${total.toFixed(2)}W, average ${avg.toFixed(2)}W`
+  ).join("\n");
 
-// A user sent the following message: "${question}"
-
-// Context – this is their summarized energy usage data:
-// ${summary}
-
-// Instructions:
-// - Respond in clear, professional, and natural text — like a real human chat.
-// - Keep the tone direct and on-topic. This is a dashboard assistant, not a general AI.
-// - Avoid any off-topic or filler phrases like: "I see", "Understood", "Certainly", "Happy to help", etc.
-// - Only answer based on the energy usage data above. If the question is off-topic, politely say it's unrelated.
-
-// Response format:
-// - Return the reply as a styled HTML snippet.
-// - Use <ul> with <li> for each insight.
-// - Apply light inline styling (e.g., font size, spacing, and bold labels) for clarity.
-
-// Strictly stay within the topic of energy usage.
-// `;
-const prompt = `
+  const prompt = `
 You are an energy assistant in a smart home web application.
 
 A user sent the following message: "${question}"
@@ -58,15 +50,13 @@ ${summary}
 
 Instructions:
 - Respond in clear, professional, and natural text — like a real human chat.
-- For each relevant device, mention both total energy usage and average energy usage.
-- Only show the top 1 or 2 highest energy-using devices based on total usage.
-- Use exact watt values where available.
-- Do not skip average usage unless specifically asked.
+- Mention both total and average energy usage for each shown device.
+- Only respond based on the data above — do not guess or fabricate values.
 - Return the reply as a styled HTML snippet.
 - Use <ul> with <li> for each insight.
 - Apply light inline styling (e.g., font size, spacing, and bold labels) for clarity.
 - Strictly stay within the topic of energy usage.
-`;
+  `;
 
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
